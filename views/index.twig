@@ -1,0 +1,98 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+	<div id="app">
+
+
+		<div class="container add-post">
+
+			<h2>Add new payment details</h2>
+			<div class="form">
+				<label>You paid for?</label>
+				<input type="text" name="for" autofocus v-model="newPayment.for">
+
+				<label>How much did you paid?</label>
+				<input type="number" name="amount" v-model="newPayment.amount">
+
+	            <label>How important it was?</label>
+	            <div class="types">
+	                <label for="veryImportant" class="type">
+	                    <input type="radio" id="veryImportant" name="importance" value="3" v-model="newPayment.importance">
+	                    <div class="color-layer"></div>
+	                    <span>Very Important!</span>
+	                </label>
+	                <label id="medium" class="type">
+	                    <input type="radio" id="medium" name="importance" value="2" v-model="newPayment.importance" checked>
+	                    <div class="color-layer"></div>
+	                    <span>Medium</span>
+	                </label>
+	                <label id="notImportant" class="type">
+	                    <input type="radio" id="notImportant" name="importance" value="1" v-model="newPayment.importance">
+	                    <div class="color-layer"></div>
+	                    <span>Not Important</span>
+	                </label>
+	            </div>
+
+				<button type="submit">Submit</button>
+	        </div>
+		</div>
+
+
+		<div class="logs">
+			<div class="log">
+				<span class="date">Sunday 26/12/2017</span>
+				<span class="days-counter">15 Days logged</span>
+				<span class="amount">100</span>
+				<button>Details</button>
+			</div>
+			<!--/-->
+			<div class="log">
+				<span class="date">Sunday 26/12/2017</span>
+				<span class="days-counter">15 Days logged</span>
+				<span class="amount">100</span>
+				<button>Details</button>
+			</div>
+			<!--/-->
+			<div class="log month">
+				<span class="month-name">January</span>
+				<span class="month-total money">2000</span>
+			</div>
+			<!--/-->
+			<div class="log">
+				<span class="date">Sunday 26/12/2017</span>
+				<span class="days-counter">15 Days logged</span>
+				<span class="amount">100</span>
+				<button>Details</button>
+			</div>
+			<!--/-->
+		</div>
+
+
+	</div><!--/#app-->
+{% endblock %}
+
+
+
+{% block js %}
+    <script src="/js/vue.min.js" charset="utf-8"></script>
+    <script src="/js/axios.min.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data: {
+                data: [],
+				newPayment: {
+					for: '',
+					amount: 1,
+					importance: 2
+				}
+			},
+			methods: {
+				add(){
+					console.log(this);
+				}
+			}
+		})
+	</script>
+{% endblock %}
