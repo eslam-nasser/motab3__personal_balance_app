@@ -5,7 +5,7 @@
 
 
 		<div class="container add-post">
-
+			<div class="alert alert-danger" style="display: none"></div>
 			<h2>Add new payment details</h2>
 			<div class="form">
 				<label>You paid for?</label>
@@ -33,7 +33,7 @@
 	                </label>
 	            </div>
 
-				<button type="submit">Submit</button>
+				<button type="submit" @click="add">Submit</button>
 	        </div>
 		</div>
 
@@ -74,9 +74,11 @@
 
 
 {% block js %}
+    <script src="/js/jquery.min.js" charset="utf-8"></script>
     <script src="/js/vue.min.js" charset="utf-8"></script>
     <script src="/js/axios.min.js" charset="utf-8"></script>
     <script type="text/javascript">
+		const api = window.location.origin
         var app = new Vue({
             delimiters: ['${', '}'],
             el: '#app',
@@ -88,9 +90,47 @@
 					importance: 2
 				}
 			},
+			mounted(){
+				axios.get(`${api}/all`)
+					.then((res) => {
+						console.log(res.data);
+						this.data = res.data;
+					})
+			},
 			methods: {
 				add(){
-					console.log(this);
+					if(this.newPayment.for == ''){
+						return this.Err('You must write what did you paid for!')
+					}
+					if(this.newPayment.amount < 1){
+						return this.Err('wtf man!, write how much did you pay!')
+					}
+
+					axios.post(`${api}/new`, this.newPayment)
+						.then(res => {
+							console.log(res.data);
+						}).catch((err) => {
+							console.log(err);
+							this.Err(err)
+						})
+				},
+
+
+
+				// Error handler
+				Err(msg = 'Something missing!'){
+					$('.alert').hide()
+				    $('body,html').animate({
+				        scrollTop: 0
+				    }, 500);
+				    $('.alert').text(msg)
+				    $('.alert').slideDown()
+				    setTimeout(() => {
+				        $('.alert').slideUp()
+				    }, 3000)
+				    setTimeout(() => {
+				        $('.alert').text('فيه بيانات ناقصة!')
+				    }, 3500)
 				}
 			}
 		})
