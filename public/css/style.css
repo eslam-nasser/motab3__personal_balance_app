@@ -15,7 +15,15 @@ a {
   color: #3498db;
 }
 
-
+.logo{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 150px;
+}
+.logo img{
+	width: 100%;
+}
 .container{
 	width: 75%;
 	padding: 10px 15px;
@@ -251,7 +259,37 @@ button[type="submit"]:hover{
 	margin: auto;
 }
 
-
+.loader{
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	background-color: rgba(255, 255, 255, .8);
+	z-index: 10;
+}
+.loader::after{
+	content: '';
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	border: 3px solid rgba(102, 126, 234, .8);
+	border-right-color: rgba(118, 75, 162, 1);
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -30px;
+	margin-top: -30px;
+	transform: rotate(0);
+	animation: loader .35s linear infinite;
+	transform-origin: center center;
+}
+@keyframes loader {
+	100%{
+		transform: rotate(360deg);
+	}
+}
 
 
 

@@ -12,20 +12,62 @@ router.get('/all', function(req, res, next) {
         .exec((err, data) => {
             if(err) throw err;
 
-            let byday = {}
+            // Group Logs By Day
+            let groupedByDay = []
             data.map(function(value, index, array){
-                d = new Date(value['created_at']);
+                let d = new Date(value['created_at']);
+                let day_date = value.created_at
                 d = Math.floor(d.getTime()/(1000*60*60*24));
-
-                console.log(d);
-                byday[d]=byday[d]||[];
-                byday[d].push(value);
+                if (groupedByDay.filter(x => x.day_id === d).length > 0) {
+                    let i = groupedByDay.map(function(e) { return e.day_id; }).indexOf(d);
+                    groupedByDay[i].day_logs.push(value)
+                }else{
+                    let obj = {
+                        day_id: d,
+                        day_date: day_date,
+                        day_logs: []
+                    }
+                    obj.day_logs.push(value)
+                    groupedByDay.push(obj)
+                }
             })
 
-            console.log(byday);
+            // Sort Days by date
+            groupedByDay.sort(function(a,b){
+                return new Date(b.day_date) - new Date(a.day_date);
+            });
 
 
-            res.json(byday)
+            // Group by Month
+            const monthNames = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
+            let groupedByMonth = []
+            groupedByDay.map(function(value, index, array){
+                let d = new Date(value['day_date']);
+                d = (d.getFullYear()-1970)*12 + d.getMonth();
+                console.log(d);
+                if (groupedByMonth.filter(x => x.id === d).length > 0) {
+                    let i = groupedByMonth.map(function(e) { return e.id; }).indexOf(d);
+                    groupedByMonth[i].days.push(value)
+                }else{
+                    let month = {
+                        id: d,
+                        month_name: monthNames[new Date(value['day_date']).getMonth()],
+                        year: new Date(value['day_date']).getFullYear(),
+                        days: []
+                    }
+                    month.days.push(value)
+                    groupedByMonth.push(month)
+                }
+            })
+
+            // Sort Months by date
+            groupedByMonth.sort(function(a,b){
+                return monthNames.indexOf(a.month_name) < monthNames.indexOf(b.month_name);
+            });
+
+
+            // Done
+            res.json(groupedByMonth)
         })
 });
  // new Data
@@ -51,11 +93,28 @@ function groupday(value, index, array){
 }
 
 
+/**
+Day Schema
+[
+    {
+        day_id: 123,
+        day_date: {Date}
+        day_logs: [{...},{...},{...}]
+    }
+]
 
-// var arabic = /[\u0600-\u06FF]/;
-// var string = 'عربية‎'; // some Arabic string from Wikipedia
-//
-// alert(arabic.test(string)); // displays true
+
+Month Schema
+[
+    {
+        id: 123,
+        month_name: 'January',
+        year: 2017,
+        days: [{...},{...},{...}]
+    }
+]
+}
+*/
 
 
 module.exports = router;

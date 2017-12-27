@@ -8,6 +8,8 @@
 			<div class="alert alert-danger" style="display: none"></div>
 			<h2>Add new payment details</h2>
 			<div class="form">
+				<div class="loader" v-if="sending == true"></div>
+
 				<label>You paid for?</label>
 				<input type="text" name="for" autofocus v-model="newPayment.for">
 
@@ -39,31 +41,30 @@
 
 
 		<div class="logs">
-			<div class="log">
+			<template v-for="month in data">
+				<div class="log month">
+					<span class="month-name">${month.month_name}</span>
+					<span class="month-total money">--</span>
+				</div>
+				<div class="log" v-for="day in month.days">
+					<span class="date">${day.day_date | formatDate}</span>
+					<span class="days-counter">${day.day_logs.length} items logged</span>
+					<span class="amount">${day.day_logs | getDaySum}</span>
+					<button>Details</button>
+				</div>
+			</template><!--month-loop-->
+			<!--/-->
+			<!-- <div class="log">
 				<span class="date">Sunday 26/12/2017</span>
 				<span class="days-counter">15 Days logged</span>
 				<span class="amount">100</span>
 				<button>Details</button>
-			</div>
+			</div> -->
 			<!--/-->
-			<div class="log">
-				<span class="date">Sunday 26/12/2017</span>
-				<span class="days-counter">15 Days logged</span>
-				<span class="amount">100</span>
-				<button>Details</button>
-			</div>
-			<!--/-->
-			<div class="log month">
+			<!-- <div class="log month">
 				<span class="month-name">January</span>
 				<span class="month-total money">2000</span>
-			</div>
-			<!--/-->
-			<div class="log">
-				<span class="date">Sunday 26/12/2017</span>
-				<span class="days-counter">15 Days logged</span>
-				<span class="amount">100</span>
-				<button>Details</button>
-			</div>
+			</div> -->
 			<!--/-->
 		</div>
 
@@ -77,6 +78,7 @@
     <script src="/js/jquery.min.js" charset="utf-8"></script>
     <script src="/js/vue.min.js" charset="utf-8"></script>
     <script src="/js/axios.min.js" charset="utf-8"></script>
+    <script src="/js/moment.js" charset="utf-8"></script>
     <script type="text/javascript">
 		const api = window.location.origin
         var app = new Vue({
@@ -88,13 +90,14 @@
 					for: '',
 					amount: 1,
 					importance: 2
-				}
+				},
+				sending: false
 			},
 			mounted(){
 				axios.get(`${api}/all`)
 					.then((res) => {
-						console.log(res.data);
 						this.data = res.data;
+						console.log(this.data);
 					})
 			},
 			methods: {
@@ -106,9 +109,17 @@
 						return this.Err('wtf man!, write how much did you pay!')
 					}
 
+					this.sending = true
+
 					axios.post(`${api}/new`, this.newPayment)
 						.then(res => {
 							console.log(res.data);
+							setTimeout(() => {
+								this.newPayment.for = ''
+								this.newPayment.amount = 1
+								this.newPayment.importance = 2
+								this.sending = false;
+							}, 100)
 						}).catch((err) => {
 							console.log(err);
 							this.Err(err)
@@ -132,7 +143,18 @@
 				        $('.alert').text('فيه بيانات ناقصة!')
 				    }, 3500)
 				}
-			}
+			},
+			filters: {
+				getDaySum(arr){
+					let x = arr.reduce((total, current, i, arr) => {
+						return total + current.amount
+					}, 0)
+					return x;
+				},
+				formatDate(date){
+					return moment(date).format('DD/MMMM/YYYY');
+				}
+			},
 		})
 	</script>
 {% endblock %}
