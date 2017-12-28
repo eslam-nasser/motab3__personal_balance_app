@@ -46,18 +46,12 @@
 
 		<div class="logs" style="display: none;opacity: 0;top: -100px">
 			<div class="loader" v-if="loading"></div>
-			<template v-for="month in data">
-				<div class="log month">
-					<span class="month-name">${month.month_name}</span>
-					<span class="month-total money">${month.days | getMonthSum | formatMoney}</span>
-				</div>
-				<div class="log" v-for="day in month.days">
-					<span class="date">${day.day_date | formatDate}</span>
-					<span class="days-counter">${day.day_logs.length} items logged</span>
-					<span class="amount">${day.day_logs | getDaySum | formatMoney}</span>
-					<button>Details</button>
-				</div>
-			</template><!--month-loop-->
+			<div class="log" v-for="income in data">
+				<span class="date">${income.created_at | formatDate}</span>
+				<span class="days-counter">${income.where}</span>
+				<span class="amount">${income.amount | formatMoney}</span>
+				<button>Details</button>
+			</div>
 			<!--/-->
 		</div>
 
@@ -80,7 +74,7 @@
             data: {
                 data: [],
 				newIncome: {
-					for: '',
+					from: '',
 					notes: '',
 					amount: 1,
 					where: 'cash'
@@ -104,18 +98,19 @@
 				},
 				add(){
 					if(this.newIncome.for == ''){
-						return this.Err('You must write what did you paid for!')
+						return this.Err('You must write the money source!')
 					}
 					if(this.newIncome.amount < 1){
-						return this.Err('wtf man!, write how much did you pay!')
+						return this.Err('wtf man!, write how much did yout earned!')
 					}
 					this.sending = true
 					axios.post(`${api}/income/new`, this.newIncome)
 						.then(res => {
 							setTimeout(() => {
-								this.newIncome.for = ''
+								this.newIncome.from = ''
+								this.newIncome.notes = ''
 								this.newIncome.amount = 1
-								this.newIncome.importance = 2
+								this.newIncome.where = 'cash'
 								this.sending = false;
 							}, 700)
 						}).catch((err) => {
@@ -126,11 +121,11 @@
 				showLogs(e){
 					this.getData()
 					window.scrollTo(0, 0);
-					$('.add-post').animate({
+					$('.add-form').animate({
 				        opacity: 0,
 				        top: -100
 				    }, function() {
-				        $('.add-post').hide()
+				        $('.add-form').hide()
 				        $('.logs').show()
 				        $('.logs').animate({
 				            opacity: 1,
@@ -177,7 +172,7 @@
 				    return n.toFixed(1).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
 				},
 				formatDate(date){
-					return moment(date).format('DD/MMMM/YYYY');
+					return moment(date).format('DD/MMMM/YYYY hh:mm:ss a');
 				}
 			},
 		})

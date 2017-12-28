@@ -55,13 +55,36 @@
 					<span class="date">${day.day_date | formatDate}</span>
 					<span class="days-counter">${day.day_logs.length} items logged</span>
 					<span class="amount">${day.day_logs | getDaySum | formatMoney}</span>
-					<button>Details</button>
+					<button @click="modal(day)">Details</button>
 				</div>
 			</template><!--month-loop-->
 			<!--/-->
 		</div>
 
 
+		<div class="d-layer" @click="hideModal"></div>
+		<div class="modal">
+			<h3>Day details</h3>
+
+			<table>
+				<thead>
+					<tr>
+						<th scope="col">For</th>
+						<th scope="col">Amount</th>
+						<th scope="col">Description</th>
+						<th scope="col">Time</th>
+						<th scope="col">Importance</th>
+					</tr>
+				</thead>
+				<tr v-for="item in modal_data.day_logs">
+					<td data-label="For">${item.for}</td>
+					<td data-label="Amount"><span class="money">${item.amount | formatMoney}</span></td>
+					<td data-label="Description">${item.description || '--'}</td>
+					<td data-label="Time">${item.created_at | formatDate}</td>
+					<td data-label="Importance">${item.importance}</td>
+				</tr>
+			</table>
+		</div>
 	</div><!--/#app-->
 {% endblock %}
 
@@ -86,12 +109,25 @@
 					importance: 2
 				},
 				sending: false,
-				loading: false
+				loading: false,
+				modal_data: {}
 			},
 			mounted(){
 				//
 			},
 			methods: {
+				modal(day){
+					this.modal_data = day
+					$('.d-layer').fadeIn('fast')
+					$('.modal').fadeIn('fast')
+				},
+				hideModal(){
+					$('.d-layer').fadeOut('fast')
+					$('.modal').fadeOut('fast')
+					setTimeout(() => {
+						this.modal_data = {}
+					}, 300)
+				},
 				getData(){
 					this.loading = true;
 					axios.get(`${api}/all`)
@@ -177,7 +213,7 @@
 				    return n.toFixed(1).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
 				},
 				formatDate(date){
-					return moment(date).format('DD/MMMM/YYYY');
+					return moment(date).format('DD/MMMM/YYYY hh:mm:ss a');
 				}
 			},
 		})

@@ -44,7 +44,6 @@ router.get('/all', function(req, res, next) {
             groupedByDay.map(function(value, index, array){
                 let d = new Date(value['day_date']);
                 d = (d.getFullYear()-1970)*12 + d.getMonth();
-                console.log(d);
                 if (groupedByMonth.filter(x => x.id === d).length > 0) {
                     let i = groupedByMonth.map(function(e) { return e.id; }).indexOf(d);
                     groupedByMonth[i].days.push(value)

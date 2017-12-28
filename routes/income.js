@@ -18,9 +18,10 @@ router.get('/all', function(req, res, next) {
  // new Data
 router.post('/new', function(req, res, next) {
     let newIncome = new Income({
-        for: req.body.for,
+        from: req.body.from,
         amount: req.body.amount,
-        importance: req.body.importance
+        notes: req.body.notes,
+        where: req.body.where
     })
     newIncome.save((err, saved) => {
         if(err) throw err;
