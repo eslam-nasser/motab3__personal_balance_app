@@ -6,41 +6,41 @@
 
 		<div class="container add-form">
 			<div class="alert alert-danger" style="display: none"></div>
-			<div class="form-badge"><img src="/img/icons/cash.svg"></div>
+			<div class="form-badge"><img src="/img/icons/safebox.svg"></div>
 			<div class="form">
 				<div class="loader" v-if="sending == true"></div>
 
-				<label>You paid for?</label>
-				<input type="text" name="for" autofocus v-model="newPayment.for">
+				<label>From?</label>
+				<input type="text" name="from" autofocus v-model="newIncome.from">
 
-				<label>Description</label>
-				<textarea name="description" rows="8" v-model="newPayment.description"></textarea>
+				<label>Notes</label>
+				<textarea name="notes" rows="8" v-model="newIncome.notes"></textarea>
 
-				<label>How much did you paid?</label>
-				<input type="number" name="amount" v-model="newPayment.amount">
+				<label>How much did you received?</label>
+				<input type="number" name="amount" v-model="newIncome.amount">
 
-	            <label>How important it was?</label>
+	            <label>Where is the money?</label>
 	            <div class="types">
-	                <label for="veryImportant" class="type">
-	                    <input type="radio" id="veryImportant" name="importance" value="3" v-model="newPayment.importance">
+	                <label for="cash" class="type">
+	                    <input type="radio" id="cash" name="where" value="cash" v-model="newIncome.where">
 	                    <div class="color-layer"></div>
-	                    <span>Very Important!</span>
+	                    <span>Cash</span>
 	                </label>
-	                <label id="medium" class="type">
-	                    <input type="radio" id="medium" name="importance" value="2" v-model="newPayment.importance" checked>
+	                <label id="bank" class="type">
+	                    <input type="radio" id="bank" name="where" value="bank" v-model="newIncome.bank" checked>
 	                    <div class="color-layer"></div>
-	                    <span>Medium</span>
+	                    <span>Bank</span>
 	                </label>
-	                <label id="notImportant" class="type">
-	                    <input type="radio" id="notImportant" name="importance" value="1" v-model="newPayment.importance">
+	                <label id="creditor" class="type">
+	                    <input type="radio" id="creditor" name="where" value="creditor" v-model="newIncome.where">
 	                    <div class="color-layer"></div>
-	                    <span>Not Important</span>
+	                    <span>Creditor</span>
 	                </label>
 	            </div>
 
 				<button type="submit" @click="add">Submit</button>
 	        </div>
-			<button class="view-logs" @click="showLogs">View your payment logs</button>
+			<button class="view-logs" @click="showLogs">View your income logs</button>
 		</div>
 
 
@@ -79,11 +79,11 @@
             el: '#app',
             data: {
                 data: [],
-				newPayment: {
+				newIncome: {
 					for: '',
-					description: '',
+					notes: '',
 					amount: 1,
-					importance: 2
+					where: 'cash'
 				},
 				sending: false,
 				loading: false
@@ -94,7 +94,7 @@
 			methods: {
 				getData(){
 					this.loading = true;
-					axios.get(`${api}/all`)
+					axios.get(`${api}/income/all`)
 						.then((res) => {
 							setTimeout(() => {
 								this.loading = false;
@@ -103,19 +103,19 @@
 						})
 				},
 				add(){
-					if(this.newPayment.for == ''){
+					if(this.newIncome.for == ''){
 						return this.Err('You must write what did you paid for!')
 					}
-					if(this.newPayment.amount < 1){
+					if(this.newIncome.amount < 1){
 						return this.Err('wtf man!, write how much did you pay!')
 					}
 					this.sending = true
-					axios.post(`${api}/new`, this.newPayment)
+					axios.post(`${api}/income/new`, this.newIncome)
 						.then(res => {
 							setTimeout(() => {
-								this.newPayment.for = ''
-								this.newPayment.amount = 1
-								this.newPayment.importance = 2
+								this.newIncome.for = ''
+								this.newIncome.amount = 1
+								this.newIncome.importance = 2
 								this.sending = false;
 							}, 700)
 						}).catch((err) => {
@@ -126,11 +126,11 @@
 				showLogs(e){
 					this.getData()
 					window.scrollTo(0, 0);
-					$('.add-form').animate({
+					$('.add-post').animate({
 				        opacity: 0,
 				        top: -100
 				    }, function() {
-				        $('.add-form').hide()
+				        $('.add-post').hide()
 				        $('.logs').show()
 				        $('.logs').animate({
 				            opacity: 1,

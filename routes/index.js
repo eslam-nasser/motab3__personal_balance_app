@@ -74,6 +74,7 @@ router.get('/all', function(req, res, next) {
 router.post('/new', function(req, res, next) {
     let newPayment = new Payment({
         for: req.body.for,
+        description: req.body.description,
         amount: req.body.amount,
         importance: req.body.importance
     })
@@ -83,14 +84,6 @@ router.post('/new', function(req, res, next) {
     })
 });
 
-
-
-function groupday(value, index, array){
-    d = new Date(value['created_at']);
-    d = Math.floor(d.getTime()/(1000*60*60*24));
-    byday[d]=byday[d]||[];
-    byday[d].push(value);
-}
 
 
 /**

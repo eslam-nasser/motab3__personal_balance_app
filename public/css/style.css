@@ -51,7 +51,7 @@ h1 a:hover{
 	margin-bottom: 5px;
 	margin-top: 15px;
 }
-select, input{
+select, input, textarea{
 	width: 100%;
 	border-radius: 2px;
 	padding: 5px 10px;
@@ -62,7 +62,11 @@ select, input{
 	font-size: 19px;
 	margin-bottom: 10px;
 }
-select:focus, input:focus{
+textarea{
+	height: 150px;
+	resize: none;
+}
+select:focus, input:focus, textarea:focus{
 	border-color: rgb(118, 75, 162);
 }
 
@@ -80,15 +84,33 @@ select:focus, input:focus{
 }
 .alert-danger{background-color: rgb(231, 76, 60)}
 .alert-success{background-color: rgb(46, 204, 113)}
-.add-post{
+.add-form{
 	position: relative;
 	margin-top: 100px;
 	width: 600px;
+	padding-top: 50px;
 }
-.add-post .form, .add-post h2{
+.form-badge{
+	position: absolute;
+	top: 0;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 50%;
+	height: 70px;
+	width: 70px;
+	display: flex;
+	z-index: 5;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+	background-color: #764ba2
+}
+.form-badge img{
+	margin: auto;
+	width: 60%;
+}
+.add-form .form, .add-form h2{
 	margin: 10px auto 15px auto;
 }
-.add-post h2{
+.add-form h2{
 	text-align: center;
 	text-transform: capitalize
 }
@@ -151,6 +173,7 @@ button[type="submit"]:hover{
 	background-color: rgba(118, 75, 162, 1);
 
 }
+
 .logs{
 	width: 300px;
 	margin: 100px auto;
@@ -337,7 +360,7 @@ button[type="submit"]:hover{
 
 
 @media screen and (max-width: 480px){
-    .add-post{
+    .add-form{
         width: calc(100% - 20px);
         margin-top: 20px;
     }
