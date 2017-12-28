@@ -1,4 +1,5 @@
 {
     "db": "mongodb://127.0.0.1:27017/motab3",
-    "secret": "b1OFyhEJyZWxh4WKoLzb"
+    "secret": "b1OFyhEJyZWxh4WKoLzb",
+    "timezone": "Eastern European Time Zone"
 }

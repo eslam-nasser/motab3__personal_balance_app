@@ -9,6 +9,9 @@ const cors            = require('cors')
 const config          = require('config')
 const mongoose        = require('mongoose')
 
+// set .env
+// process.env.TZ = config.timezone
+
 const index = require('./routes/index');
 const users = require('./routes/users');
 

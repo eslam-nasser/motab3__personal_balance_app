@@ -154,6 +154,7 @@ button[type="submit"]:hover{
 .logs{
 	width: 300px;
 	margin: 100px auto;
+	position: relative;
 }
 .logs .log{
 	background-color: #fff;
@@ -163,7 +164,6 @@ button[type="submit"]:hover{
   	transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 	position: relative;
 	display: flex;
-	/* overflow: hidden; */
 	cursor: default;
 	user-select: none;
 	margin-top: 50px;
@@ -226,7 +226,6 @@ button[type="submit"]:hover{
 .logs .log button{
 	position: absolute;
 	bottom: 0;
-	opacity: 0;
   	transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 	right: 0;
 	left: 0;
@@ -237,6 +236,8 @@ button[type="submit"]:hover{
 	display: block;
 	width: 100%;
 	cursor: pointer;
+	outline: none;
+	opacity: .2;
 }
 
 
@@ -244,10 +245,12 @@ button[type="submit"]:hover{
 .logs .log.month{
 	padding: 20px;
 	text-align: center;
-	width: 50%;
+	width: 65%;
 	margin: auto;
 	margin-top: 50px;
 	flex-direction: column;
+	background-color: #764ba2;
+	color: #fff;
 }
 .logs .log.month .month-name{
 	margin: auto;
@@ -285,12 +288,33 @@ button[type="submit"]:hover{
 	animation: loader .35s linear infinite;
 	transform-origin: center center;
 }
+.logs .loader::after{
+	margin-top: 100px;
+	border-color: #fff;
+	border-right-color: rgba(118, 75, 162, 1);
+}
 @keyframes loader {
 	100%{
 		transform: rotate(360deg);
 	}
 }
 
+
+.view-logs{
+	position: absolute;
+	left: 50%;
+	top: calc(100% + 15px);
+	transform: translateX(-50%);
+	color: #fff;
+	background: none;
+	border: none;
+	font-size: 16px;
+	font-weight: 100;
+}
+.view-logs:hover{
+	text-decoration: underline;
+	cursor: pointer;
+}
 
 
 

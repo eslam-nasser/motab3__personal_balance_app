@@ -37,34 +37,24 @@
 
 				<button type="submit" @click="add">Submit</button>
 	        </div>
+			<button class="view-logs" @click="showLogs">View your logs</button>
 		</div>
 
 
-		<div class="logs">
+		<div class="logs" style="display: none;opacity: 0;top: -100px">
+			<div class="loader" v-if="loading"></div>
 			<template v-for="month in data">
 				<div class="log month">
 					<span class="month-name">${month.month_name}</span>
-					<span class="month-total money">--</span>
+					<span class="month-total money">${month.days | getMonthSum | formatMoney}</span>
 				</div>
 				<div class="log" v-for="day in month.days">
 					<span class="date">${day.day_date | formatDate}</span>
 					<span class="days-counter">${day.day_logs.length} items logged</span>
-					<span class="amount">${day.day_logs | getDaySum}</span>
+					<span class="amount">${day.day_logs | getDaySum | formatMoney}</span>
 					<button>Details</button>
 				</div>
 			</template><!--month-loop-->
-			<!--/-->
-			<!-- <div class="log">
-				<span class="date">Sunday 26/12/2017</span>
-				<span class="days-counter">15 Days logged</span>
-				<span class="amount">100</span>
-				<button>Details</button>
-			</div> -->
-			<!--/-->
-			<!-- <div class="log month">
-				<span class="month-name">January</span>
-				<span class="month-total money">2000</span>
-			</div> -->
 			<!--/-->
 		</div>
 
@@ -91,16 +81,23 @@
 					amount: 1,
 					importance: 2
 				},
-				sending: false
+				sending: false,
+				loading: false
 			},
 			mounted(){
-				axios.get(`${api}/all`)
-					.then((res) => {
-						this.data = res.data;
-						console.log(this.data);
-					})
+				//
 			},
 			methods: {
+				getData(){
+					this.loading = true;
+					axios.get(`${api}/all`)
+						.then((res) => {
+							setTimeout(() => {
+								this.loading = false;
+								this.data = res.data;
+							}, 1000)
+						})
+				},
 				add(){
 					if(this.newPayment.for == ''){
 						return this.Err('You must write what did you paid for!')
@@ -108,22 +105,34 @@
 					if(this.newPayment.amount < 1){
 						return this.Err('wtf man!, write how much did you pay!')
 					}
-
 					this.sending = true
-
 					axios.post(`${api}/new`, this.newPayment)
 						.then(res => {
-							console.log(res.data);
 							setTimeout(() => {
 								this.newPayment.for = ''
 								this.newPayment.amount = 1
 								this.newPayment.importance = 2
 								this.sending = false;
-							}, 100)
+							}, 700)
 						}).catch((err) => {
 							console.log(err);
 							this.Err(err)
 						})
+				},
+				showLogs(e){
+					this.getData()
+					window.scrollTo(0, 0);
+					$('.add-post').animate({
+				        opacity: 0,
+				        top: -100
+				    }, function() {
+				        $('.add-post').hide()
+				        $('.logs').show()
+				        $('.logs').animate({
+				            opacity: 1,
+				            top: 0
+				        })
+				    })
 				},
 
 
@@ -150,6 +159,18 @@
 						return total + current.amount
 					}, 0)
 					return x;
+				},
+				getMonthSum(arr){
+					let x = arr.reduce((total, current, i, arr) => {
+						current.day_logs.forEach(item => {
+							total += item.amount
+						})
+						return total
+					}, 0)
+					return x;
+				},
+				formatMoney(n){
+				    return n.toFixed(1).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
 				},
 				formatDate(date){
 					return moment(date).format('DD/MMMM/YYYY');
