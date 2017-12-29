@@ -1,0 +1,108 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+	<div id="app">
+		<div class="container add-form">
+			{% if type == 'login' %}
+			<div class="form-badge"><img src="/img/icons/login.svg"></div>
+			<div class="form">
+                <div class="alert alert-danger" style="display: none"></div>
+                <div class="loader" v-if="sending == true"></div>
+				<label>Name</label>
+				<input type="text" name="name" autofocus v-model="loginUser.name">
+				<label>Password</label>
+				<input type="password" name="password" v-model="loginUser.password">
+				<button type="submit" @click="register">Login</button>
+	        </div>
+			{% else %}
+			<div class="form-badge"><img src="/img/icons/note.svg"></div>
+			<div class="form">
+                <div class="alert alert-danger" style="display: none"></div>
+                <div class="loader" v-if="sending == true"></div>
+				<label>Name</label>
+				<input type="text" name="name" autofocus v-model="newUser.name">
+				<label>Password</label>
+				<input type="password" name="password" v-model="newUser.password">
+				<label>Confirm Password</label>
+				<input type="password" name="password2" v-model="newUser.password2">
+				<button type="submit" @click="register">Create new account</button>
+	        </div>
+			{% endif %}
+		</div>
+	</div><!--/#app-->
+{% endblock %}
+
+
+
+{% block js %}
+    <script src="/js/jquery.min.js" charset="utf-8"></script>
+    <script src="/js/vue.min.js" charset="utf-8"></script>
+    <script src="/js/axios.min.js" charset="utf-8"></script>
+    <!-- <script src="/js/moment.js" charset="utf-8"></script> -->
+    <script type="text/javascript">
+		const api = window.location.origin
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data: {
+				newUser: {
+					name: '',
+					password: '',
+					password2: '',
+				},
+				loginUser: {
+					name: 'test',
+					password: '123'
+				},
+				sending: false
+			},
+			mounted(){
+				//
+			},
+			methods: {
+                register(){
+                    if(this.newUser.name === '') return this.Err('Must enter a name')
+                    if(this.newUser.password === '') return this.Err('Must enter a password')
+                    if(this.newUser.password !== this.newUser.password2) return this.Err('Two passwords must match')
+					this.sending = true;
+                    axios.post('/users/new-account', this.newUser)
+						.then(res => {
+							console.log(res);
+
+
+						})
+                },
+				login(){
+					if(this.loginUser.name === '') return this.Err('Must enter a name')
+                    if(this.loginUser.password === '') return this.Err('Must enter a password')
+					this.sending = true;
+					axios.post('/users/login', this.loginUser)
+						.then(res => {
+							console.log(res);
+						})
+				},
+
+
+
+				// Error handler
+				Err(msg = 'Something missing!'){
+					$('.alert').hide()
+				    $('body,html').animate({
+				        scrollTop: 0
+				    }, 500);
+				    $('.alert').text(msg)
+				    $('.alert').slideDown()
+				    setTimeout(() => {
+				        $('.alert').slideUp()
+				    }, 3000)
+				    setTimeout(() => {
+				        $('.alert').text('فيه بيانات ناقصة!')
+				    }, 3500)
+				}
+			},
+			filters: {
+				//
+			},
+		})
+	</script>
+{% endblock %}

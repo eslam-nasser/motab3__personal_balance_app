@@ -15,8 +15,8 @@ router.get('/all', function(req, res, next) {
             // Group Logs By Day
             let groupedByDay = []
             data.map(function(value, index, array){
-                let d = new Date(value['created_at']);
-                let day_date = value.created_at
+                let d = new Date(value['createdAt']);
+                let day_date = value.createdAt
                 d = Math.floor(d.getTime()/(1000*60*60*24));
                 if (groupedByDay.filter(x => x.day_id === d).length > 0) {
                     let i = groupedByDay.map(function(e) { return e.day_id; }).indexOf(d);

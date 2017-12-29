@@ -5,9 +5,9 @@
 
 
 		<div class="container add-form">
-			<div class="alert alert-danger" style="display: none"></div>
 			<div class="form-badge"><img src="/img/icons/safebox.svg"></div>
 			<div class="form">
+				<div class="alert alert-danger" style="display: none"></div>
 				<div class="loader" v-if="sending == true"></div>
 
 				<label>From?</label>
@@ -47,7 +47,7 @@
 		<div class="logs" style="display: none;opacity: 0;top: -100px">
 			<div class="loader" v-if="loading"></div>
 			<div class="log" v-for="income in data">
-				<span class="date">${income.created_at | formatDate}</span>
+				<span class="date">${income.createdAt | formatDate}</span>
 				<span class="days-counter">${income.where}</span>
 				<span class="amount">${income.amount | formatMoney}</span>
 				<button>Details</button>

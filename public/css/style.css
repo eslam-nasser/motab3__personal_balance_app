@@ -82,7 +82,7 @@ select:focus, input:focus, textarea:focus{
 
 /*Add post*/
 .alert{
-	position: absolute;
+	/* position: absolute; */
 	bottom: calc(100% + 10px);
 	left: 0;
 	right: 0;

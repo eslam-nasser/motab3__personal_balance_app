@@ -5,9 +5,9 @@
 
 
 		<div class="container add-form">
-			<div class="alert alert-danger" style="display: none"></div>
 			<div class="form-badge"><img src="/img/icons/cash.svg"></div>
 			<div class="form">
+				<div class="alert alert-danger" style="display: none"></div>
 				<div class="loader" v-if="sending == true"></div>
 
 				<label>You paid for?</label>
@@ -80,7 +80,7 @@
 					<td data-label="For">${item.for}</td>
 					<td data-label="Amount"><span class="money">${item.amount | formatMoney}</span></td>
 					<td data-label="Description">${item.description || '--'}</td>
-					<td data-label="Time">${item.created_at | formatDate}</td>
+					<td data-label="Time">${item.createdAt | formatDate}</td>
 					<td data-label="Importance">${item.importance}</td>
 				</tr>
 			</table>
