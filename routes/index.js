@@ -5,10 +5,11 @@ const Payment = require('../models/Payment')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+    console.log(req.session);
     res.render('index');
 });
 router.get('/all', function(req, res, next) {
-    Payment.find({})
+    Payment.find({user: req.session.user.id})
         .exec((err, data) => {
             if(err) throw err;
 
@@ -72,6 +73,7 @@ router.get('/all', function(req, res, next) {
  // new Data
 router.post('/new', function(req, res, next) {
     let newPayment = new Payment({
+        user: req.session.user.id,
         for: req.body.for,
         description: req.body.description,
         amount: req.body.amount,

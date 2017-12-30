@@ -4,6 +4,7 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const cookieSession   = require('cookie-session');
 
 const cors            = require('cors')
 const config          = require('config')
@@ -23,7 +24,7 @@ mongoose.connection.on('connected', () => {
   console.log(` | Database Is Live and Connected |\n ================================== \n`)
 })
 mongoose.connection.on('error', (error) => {
-  console.log('Something worng!!', error)
+  console.log('Something worng!! ==>', error.message)
 })
 
 // view engine setup
@@ -40,9 +41,30 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors())
 
-app.use('/', index);
-app.use('/income', income);
+// Session
+app.use(cookieSession({
+  name: 'session',
+  keys: ['icEgv95GyU', 'r5oQr21nj5'],
+  maxAge: 24 * 60 * 60 * 1000 // 1 day
+}))
+app.use(function(req, res, next){
+    res.locals.session = req.session;
+    next();
+});
+
+
+app.use('/payment', isAuthenticated, index);
+app.use('/income', isAuthenticated, income);
 app.use('/users', users);
+
+// Check if the user have a session
+function isAuthenticated(req, res, next) {
+    if (req.session.user.name && req.session.user.id){
+        return next();
+    }
+    res.redirect('/users/login');
+}
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

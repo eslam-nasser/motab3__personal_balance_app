@@ -10,6 +10,7 @@
 				<div class="alert alert-danger" style="display: none"></div>
 				<div class="loader" v-if="sending == true"></div>
 
+				<!-- {{session.user.name}} -->
 				<label>You paid for?</label>
 				<input type="text" name="for" autofocus v-model="newPayment.for">
 
@@ -130,7 +131,7 @@
 				},
 				getData(){
 					this.loading = true;
-					axios.get(`${api}/all`)
+					axios.get(`${api}/payment/all`)
 						.then((res) => {
 							setTimeout(() => {
 								this.loading = false;
@@ -146,7 +147,7 @@
 						return this.Err('wtf man!, write how much did you pay!')
 					}
 					this.sending = true
-					axios.post(`${api}/new`, this.newPayment)
+					axios.post(`${api}/payment/new`, this.newPayment)
 						.then(res => {
 							setTimeout(() => {
 								this.newPayment.for = ''

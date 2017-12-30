@@ -20,10 +20,27 @@
   <body>
       <a href="/" class="logo"><img src="/img/logo/logo-transparent-white.png" alt=""></a>
 
-      <nav>
-          <a href="/">Payments</a>
-          <a href="/income">Incomes</a>
-      </nav>
+      {% if session.user.id %}
+      <div class="avatar">
+          <div class="avatar-image" style="background-image: url('https://api.adorable.io/avatars/285/{{random()}}@adorable.io.png')"></div>
+          <div class="avatar-name">{{session.user.name}}</div>
+          <ul>
+              <li><a href="/payment">
+                  <img src="/img/icons/cash.svg">
+                  <span>Payments</span>
+              </a></li>
+              <li><a href="/income">
+                  <img src="/img/icons/safebox.svg">
+                  <span>Incomes</span>
+              </a></li>
+              <li><a href="/users/logout">
+                  <img src="/img/icons/exit.svg">
+                  <span>Logout</span>
+              </a></li>
+          </ul>
+      </div>
+      {% endif %}
+
     {% block body %}{% endblock %}
 
     {% block js %}{% endblock %}

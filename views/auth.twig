@@ -5,14 +5,14 @@
 		<div class="container add-form">
 			{% if type == 'login' %}
 			<div class="form-badge"><img src="/img/icons/login.svg"></div>
-			<div class="form">
+			<form action="/users/login" method="POST" class="form">
                 <div class="alert alert-danger" style="display: none"></div>
                 <div class="loader" v-if="sending == true"></div>
 				<label>Name</label>
 				<input type="text" name="name" autofocus v-model="loginUser.name">
 				<label>Password</label>
 				<input type="password" name="password" v-model="loginUser.password">
-				<button type="submit" @click="register">Login</button>
+				<button type="submit">Login</button>
 	        </div>
 			{% else %}
 			<div class="form-badge"><img src="/img/icons/note.svg"></div>
@@ -51,7 +51,7 @@
 					password2: '',
 				},
 				loginUser: {
-					name: 'test',
+					name: 'name',
 					password: '123'
 				},
 				sending: false
@@ -69,18 +69,18 @@
 						.then(res => {
 							console.log(res);
 
-
+							window.location = '/users/login'
 						})
                 },
-				login(){
-					if(this.loginUser.name === '') return this.Err('Must enter a name')
-                    if(this.loginUser.password === '') return this.Err('Must enter a password')
-					this.sending = true;
-					axios.post('/users/login', this.loginUser)
-						.then(res => {
-							console.log(res);
-						})
-				},
+				// login(){
+				// 	if(this.loginUser.name === '') return this.Err('Must enter a name')
+                //     if(this.loginUser.password === '') return this.Err('Must enter a password')
+				// 	this.sending = true;
+				// 	axios.post('/users/login', this.loginUser)
+				// 		.then(res => {
+				// 			console.log(res);
+				// 		})
+				// },
 
 
 

@@ -18,6 +18,7 @@ router.get('/all', function(req, res, next) {
  // new Data
 router.post('/new', function(req, res, next) {
     let newIncome = new Income({
+        user: req.session.user.id,
         from: req.body.from,
         amount: req.body.amount,
         notes: req.body.notes,

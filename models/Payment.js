@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema;
 
 const PaymentSchema = mongoose.Schema({
+    user: {type: Schema.Types.ObjectId, ref: 'User'},
     for: {type: String, required: true},
     description: {type: String, required: false},
     amount: {type: Number, required: true},
