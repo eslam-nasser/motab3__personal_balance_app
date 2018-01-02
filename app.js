@@ -10,10 +10,9 @@ const cors            = require('cors')
 const config          = require('config')
 const mongoose        = require('mongoose')
 
-// set .env
-// process.env.TZ = config.timezone
 
 const index = require('./routes/index');
+const payment = require('./routes/payment');
 const income = require('./routes/income');
 const users = require('./routes/users');
 
@@ -53,7 +52,8 @@ app.use(function(req, res, next){
 });
 
 
-app.use('/payment', isAuthenticated, index);
+app.use('/', index);
+app.use('/payment', isAuthenticated, payment);
 app.use('/income', isAuthenticated, income);
 app.use('/users', users);
 
