@@ -44,7 +44,7 @@ app.use(cors())
 app.use(cookieSession({
   name: 'session',
   keys: ['icEgv95GyU', 'r5oQr21nj5'],
-  maxAge: 24 * 60 * 60 * 1000 // 1 day
+  maxAge: 24 * 60 * 60 * 1000 * 31 // 30 day
 }))
 app.use(function(req, res, next){
     res.locals.session = req.session;
