@@ -47,7 +47,8 @@
 
 		<div class="logs" style="display: none;opacity: 0;top: -100px">
 			<div class="loader" v-if="loading"></div>
-			<template v-for="month in data">
+			<template v-for="(month, i) in data">
+				<canvas :id="`chart_${i}`" width="400" height="400"></canvas>
 				<div class="log month">
 					<span class="month-name">${month.month_name}</span>
 					<span class="month-total money">${month.days | getMonthSum | formatMoney}</span>
@@ -96,8 +97,20 @@
     <script src="/js/vue.min.js" charset="utf-8"></script>
     <script src="/js/axios.min.js" charset="utf-8"></script>
     <script src="/js/moment.js" charset="utf-8"></script>
+    <script src="/js/Chart.min.js" charset="utf-8"></script>
     <script type="text/javascript">
 		const api = window.location.origin
+		window.chartColors = {
+			red: 'rgb(255, 99, 132)',
+			orange: 'rgb(255, 159, 64)',
+			yellow: 'rgb(255, 205, 86)',
+			green: 'rgb(75, 192, 192)',
+			blue: 'rgb(54, 162, 235)',
+			purple: 'rgb(153, 102, 255)',
+			grey: 'rgb(201, 203, 207)'
+		};
+
+
         var app = new Vue({
             delimiters: ['${', '}'],
             el: '#app',
@@ -114,7 +127,7 @@
 				modal_data: {}
 			},
 			mounted(){
-				//
+				this.getData()
 			},
 			methods: {
 				modal(day){
@@ -133,10 +146,8 @@
 					this.loading = true;
 					axios.get(`${api}/payment/all`)
 						.then((res) => {
-							setTimeout(() => {
 								this.loading = false;
 								this.data = res.data;
-							}, 1000)
 						})
 				},
 				add(){
@@ -162,7 +173,6 @@
 						})
 				},
 				showLogs(e){
-					this.getData()
 					window.scrollTo(0, 0);
 					$('.add-form').animate({
 				        opacity: 0,
@@ -175,6 +185,53 @@
 				            top: 0
 				        })
 				    })
+					this.initCharts(this.data)
+				},
+				initCharts(data){
+					data.forEach((month, i) => {
+						let days_data = data.reduce((finalObj, current) => {
+							current.days.forEach(day => {
+								day.day_logs.forEach(log => {
+									console.log(finalObj);
+									if(log.importance == 1){
+										finalObj['low'] = log.amount;
+									}
+									if(log.importance == 2){
+										finalObj['mid'] = log.amount;
+									}
+									if(log.importance == 3){
+										finalObj['high'] = log.amount;
+									}
+								})
+							})
+							return finalObj;
+						}, {});
+						console.log(days_data);
+						var ctx = document.getElementById(`chart_${i}`).getContext('2d');
+						var myChart = new Chart(ctx, {
+							type: 'pie',
+							data: {
+								datasets: [{
+									data: [
+										days_data.high || 0, // important
+										days_data.mid || 0, // mid
+										days_data.low || 0 // low
+									],
+									backgroundColor: [
+										window.chartColors.red,
+										window.chartColors.orange,
+										window.chartColors.green
+									],
+									label: 'Dataset 1'
+								}],
+								labels: [
+									"Not Important",
+									"Not So Much",
+									"Very Important",
+								]
+							},
+						});
+					})
 				},
 
 
@@ -220,4 +277,5 @@
 			},
 		})
 	</script>
+
 {% endblock %}

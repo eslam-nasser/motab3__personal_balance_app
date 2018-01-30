@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)https://sandbox.sassmeister.com/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <title>Result</title>
+  <style>.card {
+  color: red;
+}
+
+.info {
+  color: red;
+}
+
+h3 {
+  color: red;
+}
+</style>
+  <script>
+    (function() {
+      var _nativeEval;
+
+      document.addEventListener('DOMContentLoaded', function() { window.parent.postMessage('Bring it.', '*'); });
+
+      _nativeEval = window.eval;
+      window.eval = function(text) { _nativeEval(text.replace(/^(.*location.*=.*)$/mi, '')); };
+
+      window.onmessage = function (event) {
+        var data, i, l, scripts;
+
+        if (event.origin === 'https://www.sassmeister.com') {
+          data = JSON.parse(event.data);
+
+          if(data.css) { document.querySelector('style').textContent = data.css; }
+
+          if(data.html) {
+            document.body.innerHTML = data.html;
+            scripts = document.body.getElementsByTagName('script'), l = scripts.length;
+            for (i = 0; i < l; i++) { window.eval(scripts[i].innerHTML) }
+          }
+
+          if(data.reset) { document.querySelector('style').textContent = document.body.innerHTML = ''; }
+        }
+      };
+    })();
+  </script>
+</head>
+<body>
+
+</body></html>
